@@ -21,16 +21,18 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import com.qa.opencart.factory.DriverFactory;
 import com.qa.opencart.frameworkexception.FrameException;
 
 public class ElementUtil {
 
 	private WebDriver driver;
+	private JavaScriptUtil jsUtil;
 	private final int DEFAULT_TIME_OUT = 5;
 
 	public ElementUtil(WebDriver driver) {
 		this.driver = driver;
-
+		jsUtil = new JavaScriptUtil(this.driver);
 	}
 
 	public void doSendKeys(By locator, String value) {
@@ -53,7 +55,11 @@ public class ElementUtil {
 	}
 
 	public WebElement getElement(By locator, int timeOut) {
-		return waitForElementVisible(locator, timeOut);
+		WebElement element = waitForElementVisible(locator, timeOut);
+		if(Boolean.parseBoolean(DriverFactory.highlightElement)) {
+			jsUtil.flash(element);
+		}
+		return element;
 	}
 
 	public WebElement getElement(By locator) {
@@ -64,6 +70,10 @@ public class ElementUtil {
 		} catch (NoSuchElementException e) {
 			System.out.println("Element is not found using this locator..." + locator);
 			element = waitForElementVisible(locator, DEFAULT_TIME_OUT);
+		}
+		
+		if(Boolean.parseBoolean(DriverFactory.highlightElement)) {
+			jsUtil.flash(element);
 		}
 		return element;
 	}
@@ -422,7 +432,11 @@ public class ElementUtil {
 	 */
 	public WebElement waitForElementVisible(By locator, int timeOut) {
 		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(timeOut));
-		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+		if(Boolean.parseBoolean(DriverFactory.highlightElement)) {
+			jsUtil.flash(element);
+		}
+		return element;
 	}
 
 	/**

@@ -10,7 +10,7 @@ public class RegisterPage {
 	
 	private WebDriver driver;
 	private ElementUtil eleUtil;
-
+				
 	private By firstName = By.id("input-firstname");
 	private By lastName = By.id("input-lastname");
 	private By email = By.id("input-email");
@@ -58,6 +58,7 @@ public class RegisterPage {
 		eleUtil.doClick(logoutLink);
 		eleUtil.doClick(registerLink);
 
+		
 		
 		return userRegSuccessMesg;
 	}
